@@ -290,12 +290,12 @@ sub Usage {
 usage $Opt{prog} [-n num] [-m days] [-t dir] [-drc] file1 file2 directory
 
       -d dry run: show what will be done
-      -v verbode: be very chatty
+      -v verbose: be very chatty
       -n # maximum number of epubs to process
       -m # minimum age of file in days
 
       -r recursive: recurse into subdirectories
-      -c copy: instead of renameing the file, copy it and leave the original behind
+      -c copy: instead of renaming the file, copy it and leave the original behind
 
       -t directory target directory where files are placed instad og keeping them where they are
 
