@@ -305,7 +305,7 @@ usage $Opt{prog} [-n num] [-m days] [-t dir] [-drc] file1 file2 directory
 EOF
         if ($msg) {
                 print STDERR "Error: $msg\n";
+                exit 1;
         }
-        exit 1;
 }
 
