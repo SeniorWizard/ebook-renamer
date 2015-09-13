@@ -307,5 +307,6 @@ EOF
                 print STDERR "Error: $msg\n";
                 exit 1;
         }
+        exit 0;
 }
 
