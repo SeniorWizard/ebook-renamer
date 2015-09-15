@@ -142,14 +142,14 @@ sub processfile {
 	if ($Opt{rename} eq 'move' ) {
 		out("moving $file to $newname",1);
 		unless ($Opt{dryrun}) {
-			move($file, $newname);
+			move($file, $newname) || die "error moving $file to $newname: $!\n";
 			utime @timestamp, $newname;
 		}
 	} else {
 		out("copying $file to $newname",1);
 		unless ($Opt{dryrun}) {
-			copy($file, $newname);
-			utime @timestamp, $newname;
+			copy(qq/$file/, qq/$newname/) || die "error copying $file to $newname: $!\n";
+			utime @timestamp, "$newname";
 		}
 	}
 	$Opt{fileschanged}++;
@@ -207,7 +207,8 @@ sub bookname {
 		$name = lc($name);
 	}
 
-	return encode('ISO-8859-1',$name);
+    #return encode('ISO-8859-1',$name);
+	return encode('utf-8',$name);
 }
 
 sub mksafe {
