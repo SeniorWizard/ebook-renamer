@@ -31,10 +31,11 @@ using strawberry perl 32-bit
 Usage
 ==
 
-    usage er.pl [-n num] [-m days] [-t dir] [-drc] file1 file2 directory
+    usage er.pl [-n num] [-m days] [-t dir] [-dpcrawl] file1 file2 directory
 
       -d dry run: show what will be done
       -v verbose: be very chatty
+      -p progress: show some progress while renaming files
       -n # maximum number of epubs to process
       -m # minimum age of file in days
 

@@ -431,73 +431,79 @@ sub out {
 
 
 sub Init {
-        $Opt{prog} = basename($0);
+    $Opt{prog} = basename($0);
 
-        $Opt{debug}=0;
-        $Opt{asciify}=0;
-        $Opt{whitespace}=0;
-        $Opt{lowercase}=0;
-        $Opt{execute}=1;
-        $Opt{dryrun}=0;
-        $Opt{recurse}=0;
-        $Opt{maxupdates}=0;
-        $Opt{rename}='move';
-        $Opt{targetdir}='';
-        $Opt{minage}=0;
+    $Opt{debug}=0;
+    $Opt{asciify}=0;
+    $Opt{whitespace}=0;
+    $Opt{lowercase}=0;
+    $Opt{execute}=1;
+    $Opt{dryrun}=0;
+    $Opt{recurse}=0;
+    $Opt{progress}=0;
+    $Opt{maxupdates}=0;
+    $Opt{rename}='move';
+    $Opt{targetdir}='';
+    $Opt{minage}=0;
 	$Opt{fileschanged}=0;
 	$Opt{filesseen}=0;
 
-        getopts( "awldvrcm:n:t:h", \%Opt ) or Usage();
+    getopts( "awlpdvrcm:n:t:h", \%Opt ) or Usage();
 
 
-        if ($Opt{d}) {
-                $Opt{dryrun}=1;
-                $Opt{debug}=1;
+    if ($Opt{d}) {
+        $Opt{dryrun}=1;
+        $Opt{debug}=1;
+    }
+
+    if ($Opt{r}) {
+        $Opt{recursive}=1;
+    }
+
+    if ($Opt{p}) {
+        $Opt{debug}=1;
+        $Opt{progress}=1;
+    }
+
+    if ($Opt{v}) {
+        $Opt{debug}=2;
+    }
+
+    if ($Opt{c}) {
+        $Opt{rename}='copy';
+    }
+
+    if ($Opt{a}) {
+        $Opt{asciify}=1;
+    }
+
+    if ($Opt{w}) {
+        $Opt{whitespace}=1;
+    }
+
+    if ($Opt{l}) {
+        $Opt{lowercase}=1;
+    }
+
+    if ($Opt{t}) {
+        if ( -d $Opt{t} && -w _ ) {
+            $Opt{targetdir}=$Opt{t};
+        } else {
+            Usage("-t must be followed by a writable directory where epubs can be stored");
         }
+    }
 
-        if ($Opt{r}) {
-                $Opt{recursive}=1;
-        }
+    if (defined($Opt{n}) && $Opt{n} =~ m#(\d+)#) {
+        $Opt{maxupdates}=$1;
+    }
 
-        if ($Opt{v}) {
-                $Opt{debug}=2;
-        }
+    if (defined($Opt{m}) && $Opt{m} =~ m#(\d+)#) {
+        $Opt{minage}=$1;
+    }
 
-        if ($Opt{c}) {
-                $Opt{rename}='copy';
-        }
-
-        if ($Opt{a}) {
-                $Opt{asciify}=1;
-        }
-
-        if ($Opt{w}) {
-                $Opt{whitespace}=1;
-        }
-
-        if ($Opt{l}) {
-                $Opt{lowercase}=1;
-        }
-
-        if ($Opt{t}) {
-		if ( -d $Opt{t} && -w _ ) {
-                	$Opt{targetdir}=$Opt{t};
-		} else {
-			Usage("-t must be followed by a writable directory where epubs can be stored");
-		}
-        }
-
-        if (defined($Opt{n}) && $Opt{n} =~ m#(\d+)#) {
-                $Opt{maxupdates}=$1;
-        }
-
-        if (defined($Opt{m}) && $Opt{m} =~ m#(\d+)#) {
-                $Opt{minage}=$1;
-        }
-
-        if ($Opt{h}) {
-                Usage();
-        }
+    if ($Opt{h}) {
+        Usage();
+    }
 
 	if ($#ARGV == -1) {
 		Usage();
@@ -510,10 +516,11 @@ sub Usage {
 
         print STDERR <<EOF;
 
-usage $Opt{prog} [-n num] [-m days] [-t dir] [-drcawl] file1 file2 directory
+usage $Opt{prog} [-n num] [-m days] [-t dir] [-dpcrawl] file1 file2 directory
 
       -d dry run: show what will be done
       -v verbose: be very chatty
+      -p progress: show some progress while renaming files
       -n # maximum number of epubs to process
       -m # minimum age of file in days
 
