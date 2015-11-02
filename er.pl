@@ -172,26 +172,32 @@ sub bookname {
 	}
 
 
-	# get opf version
-	my $version = 0;
-	eval { $version = $ep->opf->guess_version; };
-	if ($@) {
-		return undef;
-	}
-
-	my $md = $ep->opf->metadata;
-
+	# get opf variables, shadow EPUB::Parser as it does not exit gracefylly
+    my %md;
+    foreach my $var (qw(title creator version language identifier)) {
+        eval {
+            $md{$var} = $ep->opf->${var};
+        };
+        if ($@) {
+            out(" Error getting $var setting to unknown", 2);
+            $md{$var} = 'unknown';
+            if ($Opt{debug} < 2) {
+                # this is an error unless running in pure debugmode
+                return undef;
+            }
+        }
+    }
 
 	#print join(' ', ($md->title, $md->creator, $md->language, $md->identifier, $cover_img_path, $at->{cover}{href}, $at->{cover-image}{href}, "\n"));
 
-	my $author = $md->creator;
-	out("  Book info: author $author, title " . $md->title,2);
+	$md{author} = $md{creator};
+	out("  Book info: author $md{author}, title $md{title}",2);
 	#make some minor improvements
-	$author =~ s/  +/ /g;
-	$author =~ s/ (and|und|et|i|och|og) /, /g;
-	$author =~ s/ & /, /g;
+	$md{author} =~ s/  +/ /g;
+	$md{author} =~ s/ (and|und|et|i|och|og) /, /g;
+	$md{author} =~ s/ & /, /g;
 
-	my $name = sprintf("%s; %s.epub", mksafe($author), mksafe($md->title));
+	my $name = sprintf("%s; %s.epub", mksafe($md{author}), mksafe($md{title}));
 
 	if ($Opt{asciify}) {
 		$name = asciify($name);
