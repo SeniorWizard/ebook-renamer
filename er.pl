@@ -186,7 +186,7 @@ sub bookname {
             $md{$var} = $ep->opf->metadata->${var};
         };
         if ($@) {
-            out(" Error getting $var for $file", 0);
+            out(" Error getting $var for $book", 0);
             $md{$var} = 'unknown';
             if ($Opt{debug} < 2) {
                 # this is an error unless running in pure debugmode
