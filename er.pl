@@ -172,14 +172,21 @@ sub bookname {
 	}
 
 
+    # get opf version
+    my $version = 0;
+    eval { $version = $ep->opf->guess_version; };
+    if ($@) {
+       return undef;
+    }
+
 	# get opf variables, shadow EPUB::Parser as it does not exit gracefylly
     my %md;
-    foreach my $var (qw(title creator version language identifier)) {
+    foreach my $var (qw(title creator language identifier)) {
         eval {
-            $md{$var} = $ep->opf->${var};
+            $md{$var} = $ep->opf->metadata->${var};
         };
         if ($@) {
-            out(" Error getting $var setting to unknown", 2);
+            out(" Error getting $var for $file", 0);
             $md{$var} = 'unknown';
             if ($Opt{debug} < 2) {
                 # this is an error unless running in pure debugmode
@@ -188,7 +195,6 @@ sub bookname {
         }
     }
 
-	#print join(' ', ($md->title, $md->creator, $md->language, $md->identifier, $cover_img_path, $at->{cover}{href}, $at->{cover-image}{href}, "\n"));
 
 	$md{author} = $md{creator};
 	out("  Book info: author $md{author}, title $md{title}",2);
