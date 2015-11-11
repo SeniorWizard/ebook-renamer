@@ -31,7 +31,8 @@ using strawberry perl 32-bit
 Usage
 ==
 
-    usage er.pl [-n num] [-m days] [-t dir] [-dpcrawl] file1 file2 directory
+usage er.pl [-n num] [-m days] [-t dir] [-f format] [-dpcrawl] file1 file2 direc
+tory
 
       -d dry run: show what will be done
       -v verbose: be very chatty
@@ -42,12 +43,16 @@ Usage
       -a asciify: make filename 7-bit ascii, try to find a substitution or use a questionmark
       -w whitespace: replace whitesapce with underscore
       -l lowercase: only use lowercase letters
+      -f format: a format string where placeholders are replaced with book metadata (default "%A; %T")
+          %A: Author
+          %T: Title
+          %L: Language
+          %I: Identification (usually ISBN)
 
       -r recursive: recurse into subdirectories
       -c copy: instead of renaming the file, copy it and leave the original behind
 
       -t dir target directory: where files are placed insted of keeping them where they are
-
 
       -h help
 
@@ -77,5 +82,8 @@ Keep originals but make copies of books found on usb device and in tmp directory
 
     ./er.pl -rc -t /path/to/collection/ /dev/usb1 /tmp
 
+Rename book as "Title.Author [Language]"
+
+    ./er.pl -f "%T.%A [%L]" book.epub
 
 
